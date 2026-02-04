@@ -1,0 +1,217 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Insurance Premium Calculator",
+    "description": "Calculate insurance premiums based on age, risk level, and coverage",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/": {
+      "get": {
+        "summary": "Root",
+        "description": "Root endpoint - provides API information",
+        "operationId": "root__get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/calculate": {
+      "post": {
+        "summary": "Calculate Premium Endpoint",
+        "description": "Calculate insurance premium based on age, risk level, and coverage\n\nThis endpoint:\n1. Receives data (Pydantic automatically validates it)\n2. If invalid, returns error with details (Pydantic handles this)\n3. If valid, calculates premium using the formula\n4. Returns detailed breakdown\n\nArgs:\n    request: PremiumRequest object with age, risk_level, and coverage\n\nReturns:\n    PremiumResponse: Calculated premium with detailed breakdown\n\nRaises:\n    HTTPException: If calculation fails (422 for validation errors handled by Pydantic)",
+        "operationId": "calculate_premium_endpoint_calculate_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PremiumRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PremiumResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/health": {
+      "get": {
+        "summary": "Health Check",
+        "description": "Health check endpoint for monitoring",
+        "operationId": "health_check_health_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "PremiumRequest": {
+        "properties": {
+          "age": {
+            "type": "integer",
+            "maximum": 120.0,
+            "minimum": 0.0,
+            "title": "Age",
+            "description": "Age of the insured person (0-120 years)"
+          },
+          "risk_level": {
+            "$ref": "#/components/schemas/RiskLevel",
+            "description": "Risk assessment level: low, medium, or high"
+          },
+          "coverage": {
+            "type": "number",
+            "exclusiveMinimum": 0.0,
+            "title": "Coverage",
+            "description": "Coverage amount in currency (must be positive)"
+          }
+        },
+        "type": "object",
+        "required": [
+          "age",
+          "risk_level",
+          "coverage"
+        ],
+        "title": "PremiumRequest",
+        "description": "Input validation model - defines what data clients must send\n\nThis is like a data entry form with built-in validation rules:\n- Age must be a whole number between 0-120\n- Risk level must be one of: low, medium, high\n- Coverage must be a positive number"
+      },
+      "PremiumResponse": {
+        "properties": {
+          "base_premium": {
+            "type": "number",
+            "title": "Base Premium",
+            "description": "Base premium amount"
+          },
+          "age_factor": {
+            "type": "number",
+            "title": "Age Factor",
+            "description": "Age-based multiplier (as decimal, e.g., 0.10 = 10%)"
+          },
+          "risk_loading": {
+            "type": "number",
+            "title": "Risk Loading",
+            "description": "Risk-based multiplier (as decimal)"
+          },
+          "final_premium": {
+            "type": "number",
+            "title": "Final Premium",
+            "description": "Calculated total premium"
+          },
+          "coverage": {
+            "type": "number",
+            "title": "Coverage",
+            "description": "Coverage amount"
+          },
+          "breakdown": {
+            "type": "string",
+            "title": "Breakdown",
+            "description": "Human-readable calculation breakdown"
+          }
+        },
+        "type": "object",
+        "required": [
+          "base_premium",
+          "age_factor",
+          "risk_loading",
+          "final_premium",
+          "coverage",
+          "breakdown"
+        ],
+        "title": "PremiumResponse",
+        "description": "Output model - defines what the API returns\n\nProvides a detailed breakdown of the calculation for transparency"
+      },
+      "RiskLevel": {
+        "type": "string",
+        "enum": [
+          "low",
+          "medium",
+          "high"
+        ],
+        "title": "RiskLevel",
+        "description": "Risk level categories - like dropdown options in a form"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
+      }
+    }
+  }
+}

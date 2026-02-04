@@ -1,0 +1,684 @@
+{
+    "info": {
+        "_postman_id": "insurance-premium-calc-001",
+        "name": "Insurance Premium Calculator API",
+        "description": "Complete test collection for Insurance Premium Calculator API\n\nFormula: Premium = Base × (1 + AgeFactor) × (1 + RiskLoading)\n\nBase Premium: $1000\n\nAge Factors:\n- 0-25: 0%\n- 26-40: 10%\n- 41-60: 25%\n- 61+: 50%\n\nRisk Loading:\n- Low: 0%\n- Medium: 20%\n- High: 50%",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "item": [
+        {
+            "name": "Health & Info",
+            "item": [
+                {
+                    "name": "Get API Info",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "http://localhost:8000/",
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "8000",
+                            "path": [
+                                ""
+                            ]
+                        },
+                        "description": "Get basic API information including version and available endpoints"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Health Check",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "http://localhost:8000/health",
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "8000",
+                            "path": [
+                                "health"
+                            ]
+                        },
+                        "description": "Check if the API service is healthy and running"
+                    },
+                    "response": []
+                }
+            ],
+            "description": "Basic health check and API information endpoints"
+        },
+        {
+            "name": "Valid Calculations",
+            "item": [
+                {
+                    "name": "Calculate Premium - Standard Case",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"age\": 35,\n  \"risk_level\": \"medium\",\n  \"coverage\": 100000\n}"
+                        },
+                        "url": {
+                            "raw": "http://localhost:8000/calculate",
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "8000",
+                            "path": [
+                                "calculate"
+                            ]
+                        },
+                        "description": "Standard case: 35 years old, medium risk, $100,000 coverage\nExpected Premium: $1,320.00"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Young Adult - Low Risk",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"age\": 22,\n  \"risk_level\": \"low\",\n  \"coverage\": 50000\n}"
+                        },
+                        "url": {
+                            "raw": "http://localhost:8000/calculate",
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "8000",
+                            "path": [
+                                "calculate"
+                            ]
+                        },
+                        "description": "Young adult: 22 years old, low risk, $50,000 coverage\nAge Factor: 0% (0-25 range)\nRisk Loading: 0% (low)\nExpected Premium: $1,000.00"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Middle Age - Medium Risk",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"age\": 45,\n  \"risk_level\": \"medium\",\n  \"coverage\": 75000\n}"
+                        },
+                        "url": {
+                            "raw": "http://localhost:8000/calculate",
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "8000",
+                            "path": [
+                                "calculate"
+                            ]
+                        },
+                        "description": "Middle age: 45 years old, medium risk, $75,000 coverage\nAge Factor: 25% (41-60 range)\nRisk Loading: 20% (medium)\nExpected Premium: $1,500.00"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Senior - High Risk",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"age\": 65,\n  \"risk_level\": \"high\",\n  \"coverage\": 200000\n}"
+                        },
+                        "url": {
+                            "raw": "http://localhost:8000/calculate",
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "8000",
+                            "path": [
+                                "calculate"
+                            ]
+                        },
+                        "description": "Senior: 65 years old, high risk, $200,000 coverage\nAge Factor: 50% (61+ range)\nRisk Loading: 50% (high)\nExpected Premium: $2,250.00"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Age 30 - Low Risk",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"age\": 30,\n  \"risk_level\": \"low\",\n  \"coverage\": 100000\n}"
+                        },
+                        "url": {
+                            "raw": "http://localhost:8000/calculate",
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "8000",
+                            "path": [
+                                "calculate"
+                            ]
+                        },
+                        "description": "Age 30, low risk\nAge Factor: 10% (26-40 range)\nRisk Loading: 0% (low)\nExpected Premium: $1,100.00"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Age 30 - Medium Risk",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"age\": 30,\n  \"risk_level\": \"medium\",\n  \"coverage\": 100000\n}"
+                        },
+                        "url": {
+                            "raw": "http://localhost:8000/calculate",
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "8000",
+                            "path": [
+                                "calculate"
+                            ]
+                        },
+                        "description": "Age 30, medium risk\nAge Factor: 10% (26-40 range)\nRisk Loading: 20% (medium)\nExpected Premium: $1,320.00"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Age 30 - High Risk",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"age\": 30,\n  \"risk_level\": \"high\",\n  \"coverage\": 100000\n}"
+                        },
+                        "url": {
+                            "raw": "http://localhost:8000/calculate",
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "8000",
+                            "path": [
+                                "calculate"
+                            ]
+                        },
+                        "description": "Age 30, high risk\nAge Factor: 10% (26-40 range)\nRisk Loading: 50% (high)\nExpected Premium: $1,650.00"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Edge Case - Age 0",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"age\": 0,\n  \"risk_level\": \"low\",\n  \"coverage\": 25000\n}"
+                        },
+                        "url": {
+                            "raw": "http://localhost:8000/calculate",
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "8000",
+                            "path": [
+                                "calculate"
+                            ]
+                        },
+                        "description": "Edge case: Minimum age (0)\nExpected Premium: $1,000.00"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Edge Case - Age 120",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"age\": 120,\n  \"risk_level\": \"low\",\n  \"coverage\": 10000\n}"
+                        },
+                        "url": {
+                            "raw": "http://localhost:8000/calculate",
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "8000",
+                            "path": [
+                                "calculate"
+                            ]
+                        },
+                        "description": "Edge case: Maximum age (120)\nAge Factor: 50% (61+ range)\nExpected Premium: $1,500.00"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Large Coverage Amount",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"age\": 40,\n  \"risk_level\": \"medium\",\n  \"coverage\": 1000000\n}"
+                        },
+                        "url": {
+                            "raw": "http://localhost:8000/calculate",
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "8000",
+                            "path": [
+                                "calculate"
+                            ]
+                        },
+                        "description": "Large coverage: $1,000,000\nAge Factor: 10% (26-40 range)\nRisk Loading: 20% (medium)\nExpected Premium: $1,320.00"
+                    },
+                    "response": []
+                }
+            ],
+            "description": "Valid premium calculation requests with different age ranges and risk levels"
+        },
+        {
+            "name": "Validation Tests (Pydantic)",
+            "item": [
+                {
+                    "name": "Invalid - Age as String",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"age\": \"thirty-five\",\n  \"risk_level\": \"medium\",\n  \"coverage\": 100000\n}"
+                        },
+                        "url": {
+                            "raw": "http://localhost:8000/calculate",
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "8000",
+                            "path": [
+                                "calculate"
+                            ]
+                        },
+                        "description": "Test Pydantic validation: Age must be an integer, not a string\nExpected: 422 Unprocessable Entity with error details"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Invalid - Age Too High",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"age\": 150,\n  \"risk_level\": \"medium\",\n  \"coverage\": 100000\n}"
+                        },
+                        "url": {
+                            "raw": "http://localhost:8000/calculate",
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "8000",
+                            "path": [
+                                "calculate"
+                            ]
+                        },
+                        "description": "Test Pydantic validation: Age must be <= 120\nExpected: 422 Unprocessable Entity"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Invalid - Negative Age",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"age\": -5,\n  \"risk_level\": \"medium\",\n  \"coverage\": 100000\n}"
+                        },
+                        "url": {
+                            "raw": "http://localhost:8000/calculate",
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "8000",
+                            "path": [
+                                "calculate"
+                            ]
+                        },
+                        "description": "Test Pydantic validation: Age must be >= 0\nExpected: 422 Unprocessable Entity"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Invalid - Wrong Risk Level",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"age\": 35,\n  \"risk_level\": \"super-high\",\n  \"coverage\": 100000\n}"
+                        },
+                        "url": {
+                            "raw": "http://localhost:8000/calculate",
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "8000",
+                            "path": [
+                                "calculate"
+                            ]
+                        },
+                        "description": "Test Pydantic validation: Risk level must be 'low', 'medium', or 'high'\nExpected: 422 Unprocessable Entity"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Invalid - Negative Coverage",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"age\": 35,\n  \"risk_level\": \"medium\",\n  \"coverage\": -5000\n}"
+                        },
+                        "url": {
+                            "raw": "http://localhost:8000/calculate",
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "8000",
+                            "path": [
+                                "calculate"
+                            ]
+                        },
+                        "description": "Test Pydantic validation: Coverage must be positive (> 0)\nExpected: 422 Unprocessable Entity"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Invalid - Zero Coverage",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"age\": 35,\n  \"risk_level\": \"medium\",\n  \"coverage\": 0\n}"
+                        },
+                        "url": {
+                            "raw": "http://localhost:8000/calculate",
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "8000",
+                            "path": [
+                                "calculate"
+                            ]
+                        },
+                        "description": "Test Pydantic validation: Coverage must be > 0 (not zero)\nExpected: 422 Unprocessable Entity"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Invalid - Missing Age Field",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"risk_level\": \"medium\",\n  \"coverage\": 100000\n}"
+                        },
+                        "url": {
+                            "raw": "http://localhost:8000/calculate",
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "8000",
+                            "path": [
+                                "calculate"
+                            ]
+                        },
+                        "description": "Test Pydantic validation: Age field is required\nExpected: 422 Unprocessable Entity"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Invalid - Missing Risk Level",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"age\": 35,\n  \"coverage\": 100000\n}"
+                        },
+                        "url": {
+                            "raw": "http://localhost:8000/calculate",
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "8000",
+                            "path": [
+                                "calculate"
+                            ]
+                        },
+                        "description": "Test Pydantic validation: Risk level field is required\nExpected: 422 Unprocessable Entity"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Invalid - Missing Coverage",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"age\": 35,\n  \"risk_level\": \"medium\"\n}"
+                        },
+                        "url": {
+                            "raw": "http://localhost:8000/calculate",
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "8000",
+                            "path": [
+                                "calculate"
+                            ]
+                        },
+                        "description": "Test Pydantic validation: Coverage field is required\nExpected: 422 Unprocessable Entity"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Invalid - Empty Body",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{}"
+                        },
+                        "url": {
+                            "raw": "http://localhost:8000/calculate",
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "8000",
+                            "path": [
+                                "calculate"
+                            ]
+                        },
+                        "description": "Test Pydantic validation: All fields are required\nExpected: 422 Unprocessable Entity"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Invalid - Coverage as String",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"age\": 35,\n  \"risk_level\": \"medium\",\n  \"coverage\": \"one hundred thousand\"\n}"
+                        },
+                        "url": {
+                            "raw": "http://localhost:8000/calculate",
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "8000",
+                            "path": [
+                                "calculate"
+                            ]
+                        },
+                        "description": "Test Pydantic validation: Coverage must be a number, not a string\nExpected: 422 Unprocessable Entity"
+                    },
+                    "response": []
+                }
+            ],
+            "description": "Test cases to verify Pydantic data validation is working correctly. All these should return 422 errors."
+        }
+    ],
+    "variable": [
+        {
+            "key": "base_url",
+            "value": "http://localhost:8000",
+            "type": "string"
+        }
+    ]
+}
