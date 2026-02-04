@@ -21,7 +21,9 @@ app = FastAPI(
 # Configure CORS (Cross-Origin Resource Sharing)
 # This allows the Lovable frontend to communicate with this API
 origins = [
-    "*",  # TODO: Replace with specific Lovable URL in production (e.g., "https://xyz.lovable.app")
+    "https://lovable.app",
+    "https://*.lovableproject.com",
+    "http://localhost:5173",
 ]
 
 app.add_middleware(
