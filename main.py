@@ -6,6 +6,7 @@ Formula: Premium = Base × (1 + AgeFactor) × (1 + RiskLoading)
 """
 
 from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field, validator
 from typing import Literal
 from enum import Enum
@@ -15,6 +16,20 @@ app = FastAPI(
     title="Insurance Premium Calculator",
     description="Calculate insurance premiums based on age, risk level, and coverage",
     version="1.0.0"
+)
+
+# Configure CORS (Cross-Origin Resource Sharing)
+# This allows the Lovable frontend to communicate with this API
+origins = [
+    "*",  # TODO: Replace with specific Lovable URL in production (e.g., "https://xyz.lovable.app")
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],  # Allow all methods (GET, POST, etc.)
+    allow_headers=["*"],  # Allow all headers
 )
 
 
